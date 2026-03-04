@@ -1,19 +1,19 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { analyzeSentiment } from "../lib/sentiment.ts";
-import { validateImdbId } from "../lib/validators.ts";
+import { validateMovieName } from "../lib/validators.ts";
 import { fetchCast } from "../lib/fetchCast.ts";
 import { generateAudienceSummary } from "../lib/aiSummary.ts";
 
-test("validateImdbId should accept valid ids", () => {
-  assert.equal(validateImdbId("tt0133093"), true);
-  assert.equal(validateImdbId("tt0468569"), true);
+test("validateMovieName should accept valid movie names", () => {
+  assert.equal(validateMovieName("The Matrix"), true);
+  assert.equal(validateMovieName("Dune"), true);
 });
 
-test("validateImdbId should reject invalid ids", () => {
-  assert.equal(validateImdbId("0133093"), false);
-  assert.equal(validateImdbId("ttabc"), false);
-  assert.equal(validateImdbId(""), false);
+test("validateMovieName should reject invalid movie names", () => {
+  assert.equal(validateMovieName("A"), false);
+  assert.equal(validateMovieName(""), false);
+  assert.equal(validateMovieName(" "), false);
 });
 
 test("analyzeSentiment should classify clearly positive input", () => {
@@ -35,13 +35,13 @@ test("analyzeSentiment should classify mixed input", () => {
   assert.equal(insight.classification, "mixed");
 });
 
-test("fetchCast should normalize and limit cast members", () => {
+test("fetchCast should normalize cast members", () => {
   const cast = fetchCast(
     "A, B, C, D, E, F, G, H, I, J"
   );
-  assert.equal(cast.length, 8);
+  assert.equal(cast.length, 10);
   assert.equal(cast[0], "A");
-  assert.equal(cast[7], "H");
+  assert.equal(cast[9], "J");
 });
 
 test("generateAudienceSummary should fallback when OPENAI_API_KEY is missing", async () => {

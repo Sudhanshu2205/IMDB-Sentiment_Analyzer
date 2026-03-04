@@ -11,7 +11,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSearch = async (imdbId: string) => {
+  const handleSearch = async (movieName: string) => {
     setLoading(true);
     setError("");
     setMovie(null);
@@ -20,7 +20,7 @@ export default function Home() {
       const response = await fetch("/api/movies", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imdbId }),
+        body: JSON.stringify({ movieName }),
       });
 
       const data = await response.json();
@@ -44,9 +44,9 @@ export default function Home() {
     <main className="page-shell">
       <section className="hero fade-in">
         <p className="eyebrow">IMDb Sentiment Analyzer</p>
-        <h1>Movie Intelligence from a Single IMDb ID</h1>
+        <h1>Movie Intelligence from a Movie Name</h1>
         <p className="hero-text">
-          Enter any IMDb ID and instantly get metadata, cast details, and an AI-generated summary of audience sentiment.
+          Enter a movie name and instantly get metadata, cast details, and an AI-generated summary of audience sentiment.
         </p>
       </section>
 

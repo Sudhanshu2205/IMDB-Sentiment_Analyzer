@@ -6,6 +6,5 @@ export function fetchCast(actorsRaw: string): string[] {
   return actorsRaw
     .split(",")
     .map((actor) => actor.trim())
-    .filter(Boolean)
-    .slice(0, 8);
+    .filter(Boolean);
 }

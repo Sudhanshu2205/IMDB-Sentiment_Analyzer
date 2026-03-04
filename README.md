@@ -1,6 +1,6 @@
 # IMDb Sentiment Analyzer
 
-A Next.js app where users enter an IMDb ID (example: `tt0133093`) and get:
+A Next.js app where users enter a movie name (example: `The Matrix`) and get:
 - movie title and poster
 - cast list
 - release year and IMDb rating
@@ -57,7 +57,7 @@ Vercel handles Next.js build and hosting automatically.
 ## Assumptions
 - IMDb audience reviews are fetched via IMDb review endpoint; if unavailable, fallback review snippets are generated from movie context.
 - If `OPENAI_API_KEY` is unavailable or fails, summary falls back to the heuristic sentiment output.
-- IMDb IDs follow format `tt` + 7 to 9 digits.
+- Movie names should be at least 2 characters long.
 
 ## Project Structure
 - `app/page.tsx`: main UI and request workflow

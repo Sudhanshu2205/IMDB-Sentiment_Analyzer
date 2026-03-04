@@ -4,7 +4,7 @@ import { fetchCast } from "@/lib/fetchCast";
 import { fetchReviews } from "@/lib/fetchReviews";
 import { analyzeSentiment } from "@/lib/sentiment";
 import { generateAudienceSummary } from "@/lib/aiSummary";
-import { validateImdbId } from "@/lib/validators";
+import { validateMovieName } from "@/lib/validators";
 
 type ErrorResponse = { error: string };
 
@@ -17,21 +17,21 @@ export default async function handler(
   }
 
   try {
-    const imdbId = String(req.body?.imdbId || "").trim();
+    const movieName = String(req.body?.movieName || "").trim();
 
-    if (!imdbId) {
-      return res.status(400).json({ error: "IMDb ID is required" } satisfies ErrorResponse);
+    if (!movieName) {
+      return res.status(400).json({ error: "Movie name is required" } satisfies ErrorResponse);
     }
 
-    if (!validateImdbId(imdbId)) {
+    if (!validateMovieName(movieName)) {
       return res.status(400).json({
-        error: "Invalid IMDb ID format. Use values like tt0133093.",
+        error: "Movie name must have at least 2 characters.",
       } satisfies ErrorResponse);
     }
 
-    const movie = await fetchMovie(imdbId);
+    const movie = await fetchMovie(movieName);
     const cast = fetchCast(movie.actors);
-    const reviews = await fetchReviews(imdbId, {
+    const reviews = await fetchReviews(movie.imdbId, {
       title: movie.title,
       plot: movie.plot,
       rating: movie.rating,
@@ -60,7 +60,7 @@ export default async function handler(
       cast,
       reviews: {
         count: reviews.length,
-        samples: reviews.slice(0, 3),
+        samples: reviews.slice(0, 6),
       },
       insights: finalInsights,
       summarySource: aiSummary.source,

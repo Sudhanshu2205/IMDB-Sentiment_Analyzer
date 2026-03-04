@@ -1,5 +1,5 @@
 import axios from "axios";
-import { validateImdbId } from "@/lib/validators";
+import { validateMovieName } from "@/lib/validators";
 
 export interface MovieDetails {
   imdbId: string;
@@ -14,6 +14,7 @@ export interface MovieDetails {
 interface OmdbResponse {
   Response: "True" | "False";
   Error?: string;
+  imdbID?: string;
   Title?: string;
   Poster?: string;
   Year?: string;
@@ -22,9 +23,9 @@ interface OmdbResponse {
   Actors?: string;
 }
 
-export async function fetchMovie(imdbId: string) {
-  if (!validateImdbId(imdbId)) {
-    throw new Error("Invalid IMDb ID format");
+export async function fetchMovie(movieName: string) {
+  if (!validateMovieName(movieName)) {
+    throw new Error("Invalid movie name");
   }
 
   try {
@@ -32,9 +33,9 @@ export async function fetchMovie(imdbId: string) {
       "https://www.omdbapi.com/",
       {
         params: {
-          i: imdbId,
+          t: movieName,
           apikey: process.env.OMDB_API_KEY,
-          plot: "short",
+          plot: "full",
         },
       }
     );
@@ -44,9 +45,12 @@ export async function fetchMovie(imdbId: string) {
     if (data.Response === "False") {
       throw new Error(data.Error || "Movie not found");
     }
+    if (!data.imdbID) {
+      throw new Error("IMDb ID not available for this title");
+    }
 
     return <MovieDetails>{
-      imdbId,
+      imdbId: data.imdbID,
       title: data.Title || "Unknown title",
       poster:
         data.Poster && data.Poster !== "N/A"

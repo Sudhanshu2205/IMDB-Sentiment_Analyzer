@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "IMDb Sentiment Analyzer",
-  description: "Analyze movie details and audience sentiment using IMDb IDs.",
+  description: "Analyze movie details and audience sentiment using movie names.",
 };
 
 export default function RootLayout({

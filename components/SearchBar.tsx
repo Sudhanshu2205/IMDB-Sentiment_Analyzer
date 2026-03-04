@@ -4,24 +4,24 @@ import { FormEvent, useState } from "react";
 
 interface SearchBarProps {
   loading: boolean;
-  onSearch: (imdbId: string) => void;
+  onSearch: (movieName: string) => void;
 }
 
 export default function SearchBar({ loading, onSearch }: SearchBarProps) {
-  const [imdbId, setImdbId] = useState("");
+  const [movieName, setMovieName] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const value = imdbId.trim();
+    const value = movieName.trim();
 
     if (!value) {
-      setError("Please enter an IMDb ID.");
+      setError("Please enter a movie name.");
       return;
     }
 
-    if (!/^tt\d{7,9}$/i.test(value)) {
-      setError("Use a valid IMDb ID like tt0133093.");
+    if (value.length < 2) {
+      setError("Enter at least 2 characters.");
       return;
     }
 
@@ -31,16 +31,16 @@ export default function SearchBar({ loading, onSearch }: SearchBarProps) {
 
   return (
     <form onSubmit={handleSubmit} className="search-form">
-      <label htmlFor="imdbId" className="search-label">
-        IMDb Movie ID
+      <label htmlFor="movieName" className="search-label">
+        Movie Name
       </label>
       <div className="search-row">
         <input
-          id="imdbId"
+          id="movieName"
           type="text"
-          placeholder="tt0133093"
-          value={imdbId}
-          onChange={(event) => setImdbId(event.target.value)}
+          placeholder="The Matrix"
+          value={movieName}
+          onChange={(event) => setMovieName(event.target.value)}
           className="search-input"
           autoComplete="off"
         />
