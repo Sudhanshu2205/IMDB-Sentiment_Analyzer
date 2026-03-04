@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IMDb Sentiment Analyzer
 
-## Getting Started
+A Next.js app where users enter an IMDb ID (example: `tt0133093`) and get:
+- movie title and poster
+- cast list
+- release year and IMDb rating
+- short plot summary
+- AI-style audience sentiment summary
+- overall sentiment class (`positive`, `mixed`, `negative`)
+- optional OpenAI-generated sentiment summary (fallback to local heuristic)
 
-First, run the development server:
+## Tech Stack Rationale
+- **Next.js + React + TypeScript**: modern full-stack JavaScript ecosystem, fast development, strong typing, and easy deployment.
+- **Node.js API route (`pages/api/movies.ts`)**: server-side orchestration for OMDb + IMDb review fetching and sentiment analysis.
+- **Tailwind v4 + custom CSS**: responsive UI with modern styling and animations while keeping code maintainable.
 
+This stack is aligned with scalable web app development and simple to deploy to Vercel.
+
+## Setup Instructions
+1. Install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Configure environment variables in `.env.local`:
+```env
+OMDB_API_KEY=your_omdb_api_key
+OPENAI_API_KEY=your_openai_api_key_optional
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open:
+`http://localhost:3000`
 
-## Learn More
+## Testing
+Run unit tests:
+```bash
+npm test
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment (Mandatory)
+Recommended: **Vercel**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Push this repo to GitHub.
+2. Import project in Vercel.
+3. Add environment variable:
+   - `OMDB_API_KEY`
+   - `OPENAI_API_KEY` (optional, for LLM summary)
+4. Deploy.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Vercel handles Next.js build and hosting automatically.
 
-## Deploy on Vercel
+## Assumptions
+- IMDb audience reviews are fetched via IMDb review endpoint; if unavailable, fallback review snippets are generated from movie context.
+- If `OPENAI_API_KEY` is unavailable or fails, summary falls back to the heuristic sentiment output.
+- IMDb IDs follow format `tt` + 7 to 9 digits.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+- `app/page.tsx`: main UI and request workflow
+- `pages/api/movies.ts`: backend endpoint
+- `lib/fetchMovie.ts`: OMDb movie metadata
+- `lib/fetchReviews.ts`: audience review snippet retrieval
+- `lib/fetchCast.ts`: cast extraction
+- `lib/sentiment.ts`: sentiment scoring + summary
+- `tests/movie.test.ts`: unit tests
